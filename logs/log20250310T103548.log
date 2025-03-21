@@ -1,0 +1,20 @@
+2025-03-10 10:35:48.931635: Logging Start - James.Trimble
+2025-03-10 10:35:48.931674: Checking for files in C:/Python/Workspace/xmlorderimport
+2025-03-10 10:35:48.932250: 1 files found
+2025-03-10 10:35:48.932272: Importing test.csv
+2025-03-10 10:35:48.949278: Error checking on test.csv
+2025-03-10 10:35:48.949421: Concatenating 4 Address Columns
+2025-03-10 10:35:48.957697: No errors found, checking for orders
+2025-03-10 10:35:48.960861: 2 orders found in test.csv
+2025-03-10 10:35:48.962899: Creating xml for order TESTON in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+TESTING - {'UNIT_PRICE': np.float64(1.1), 'POSTAGE': np.int64(2), 'FIRSTNAME': 'Test', 'SURNAME': 'Testerman', 'EMAIL': 'test@testland.test', 'TELEPHONE': np.int64(1234567890), 'ADDRESS1': '1 Test Drive', 'ADDRESS2': 'Testingville', 'ADDRESS3': 'Testton', 'ADDRESS4': 'Nanover Place', 'CITY': 'Test', 'COUNTY': 'Testshire', 'POSTCODE': 'TE5 5TS', 'COUNTRY': 'GB', 'SOURCE': 'WEB', 'CARRIER': 'RMT', 'DELMETHOD': 'RMTSTD', 'REF_NO': 'TESTON', 'DELFIRSTNAME': nan, 'DELSURNAME': nan, 'DELADDRESS': nan, 'DELCITY': nan, 'DELPOSTCODE': nan, 'ERROR': None, 'ADDRESS': '1 Test Drive~Testingville~Testton~Nanover Place'}
+TESTING - {'UNIT_PRICE': False, 'POSTAGE': False, 'FIRSTNAME': False, 'SURNAME': False, 'EMAIL': False, 'TELEPHONE': False, 'ADDRESS1': False, 'ADDRESS2': False, 'ADDRESS3': False, 'ADDRESS4': False, 'CITY': False, 'COUNTY': False, 'POSTCODE': False, 'COUNTRY': False, 'SOURCE': False, 'CARRIER': False, 'DELMETHOD': False, 'REF_NO': False, 'DELFIRSTNAME': True, 'DELSURNAME': True, 'DELADDRESS': True, 'DELCITY': True, 'DELPOSTCODE': True, 'ERROR': True, 'ADDRESS': False}
+2025-03-10 10:35:48.968661: XML Creation Failed for order TESTON
+2025-03-10 10:35:48.969948: Creating xml for order TESTTW in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+TESTING - {'UNIT_PRICE': np.float64(1.1), 'POSTAGE': np.int64(2), 'FIRSTNAME': 'Test', 'SURNAME': 'Testerman', 'EMAIL': 'test@testland.test', 'TELEPHONE': np.int64(1234567890), 'ADDRESS1': '1 Test Drive', 'ADDRESS2': 'Testingville', 'ADDRESS3': 'Testton', 'ADDRESS4': 'Nanover Place', 'CITY': 'Test', 'COUNTY': 'Testshire', 'POSTCODE': 'TE5 5TS', 'COUNTRY': 'GB', 'SOURCE': 'WEB', 'CARRIER': 'RMT', 'DELMETHOD': 'RMTSTD', 'REF_NO': 'TESTTW', 'DELFIRSTNAME': 'John', 'DELSURNAME': 'Testerson', 'DELADDRESS': '5 Test Street', 'DELCITY': 'Testville', 'DELPOSTCODE': 'TE7 8RT', 'ERROR': None, 'ADDRESS': '1 Test Drive~Testingville~Testton~Nanover Place'}
+TESTING - {'UNIT_PRICE': False, 'POSTAGE': False, 'FIRSTNAME': False, 'SURNAME': False, 'EMAIL': False, 'TELEPHONE': False, 'ADDRESS1': False, 'ADDRESS2': False, 'ADDRESS3': False, 'ADDRESS4': False, 'CITY': False, 'COUNTY': False, 'POSTCODE': False, 'COUNTRY': False, 'SOURCE': False, 'CARRIER': False, 'DELMETHOD': False, 'REF_NO': False, 'DELFIRSTNAME': False, 'DELSURNAME': False, 'DELADDRESS': False, 'DELCITY': False, 'DELPOSTCODE': False, 'ERROR': True, 'ADDRESS': False}
+2025-03-10 10:35:48.974839: Moving test.csv to archive
+2025-03-10 10:35:48.976588: XML creation completed
+2025-03-10 10:35:48.976614: No client specified, skipping webimport export
+2025-03-10 10:35:48.976636: All tasks complete, closing
+ 1 arguments: ['C:\\Python\\Workspace\\xmlorderimport\\main.py']

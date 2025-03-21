@@ -1,0 +1,17 @@
+2025-03-10 10:48:28.150203: Logging Start - James.Trimble
+2025-03-10 10:48:28.150237: Checking for files in C:/Python/Workspace/xmlorderimport
+2025-03-10 10:48:28.150814: 1 files found
+2025-03-10 10:48:28.150836: Importing test.csv
+2025-03-10 10:48:28.168449: Error checking on test.csv
+2025-03-10 10:48:28.168510: Concatenating 4 Address Columns
+2025-03-10 10:48:28.174756: No errors found, checking for orders
+2025-03-10 10:48:28.175343: 2 orders found in test.csv
+2025-03-10 10:48:28.176388: Creating xml for order TESTON in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+TESTING - {'UNIT_PRICE': np.float64(1.1), 'POSTAGE': np.int64(2), 'FIRSTNAME': 'Test', 'SURNAME': 'Testerman', 'EMAIL': 'test@testland.test', 'TELEPHONE': np.int64(1234567890), 'ADDRESS1': '1 Test Drive', 'ADDRESS2': 'Testingville', 'ADDRESS3': 'Testton', 'ADDRESS4': 'Nanover Place', 'CITY': 'Test', 'COUNTY': 'Testshire', 'POSTCODE': 'TE5 5TS', 'COUNTRY': 'GB', 'SOURCE': 'WEB', 'CARRIER': 'RMT', 'DELMETHOD': 'RMTSTD', 'REF_NO': 'TESTON', 'ADDRESS': '1 Test Drive~Testingville~Testton~Nanover Place'}
+2025-03-10 10:48:28.190473: Creating xml for order TESTTW in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+TESTING - {'UNIT_PRICE': np.float64(1.1), 'POSTAGE': np.int64(2), 'FIRSTNAME': 'Test', 'SURNAME': 'Testerman', 'EMAIL': 'test@testland.test', 'TELEPHONE': np.int64(1234567890), 'ADDRESS1': '1 Test Drive', 'ADDRESS2': 'Testingville', 'ADDRESS3': 'Testton', 'ADDRESS4': 'Nanover Place', 'CITY': 'Test', 'COUNTY': 'Testshire', 'POSTCODE': 'TE5 5TS', 'COUNTRY': 'GB', 'SOURCE': 'WEB', 'CARRIER': 'RMT', 'DELMETHOD': 'RMTSTD', 'REF_NO': 'TESTTW', 'DELFIRSTNAME': 'John', 'DELSURNAME': 'Testerson', 'DELADDRESS': '5 Test Street', 'DELCITY': 'Testville', 'DELPOSTCODE': 'TE7 8RT', 'ADDRESS': '1 Test Drive~Testingville~Testton~Nanover Place'}
+2025-03-10 10:48:28.201215: Moving test.csv to archive
+2025-03-10 10:48:28.205051: XML creation completed
+2025-03-10 10:48:28.205093: No client specified, skipping webimport export
+2025-03-10 10:48:28.205099: All tasks complete, closing
+ 1 arguments: ['C:\\Python\\Workspace\\xmlorderimport\\main.py']

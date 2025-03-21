@@ -1,0 +1,28 @@
+2025-03-14 08:27:09.094142: Logging Start - James.Trimble
+2025-03-14 08:27:09.094351: Checking for files in C:/Python/Workspace/xmlorderimport
+2025-03-14 08:27:09.094646: 1 files found
+2025-03-14 08:27:09.094656: Importing AgoraManualorders.csv
+2025-03-14 08:27:09.117401: Error checking on AgoraManualorders.csv
+2025-03-14 08:27:09.126500: No errors found, checking for orders
+2025-03-14 08:27:09.129987: 14 orders found in AgoraManualorders.csv
+2025-03-14 08:27:09.131302: Creating xml for order AM21946 in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-14 08:27:09.142249: Creating xml for order AM21947 in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-14 08:27:09.151870: Creating xml for order AM21948 in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-14 08:27:09.159999: Creating xml for order AM21949 in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-14 08:27:09.168660: Creating xml for order AM21950 in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-14 08:27:09.176300: Creating xml for order AM21951 in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-14 08:27:09.186242: Creating xml for order AM21952 in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-14 08:27:09.194160: Creating xml for order AM21953 in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-14 08:27:09.204299: Creating xml for order AM21954 in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-14 08:27:09.212132: Creating xml for order AM21955 in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-14 08:27:09.222049: Creating xml for order AM21956 in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-14 08:27:09.229944: XML Creation Failed for order AM21956
+2025-03-14 08:27:09.232354: Creating xml for order AM21957 in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-14 08:27:09.243062: Creating xml for order AM21958 in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-14 08:27:09.251307: Creating xml for order AM21959 in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-14 08:27:09.259789: XML Creation Failed for order AM21959
+2025-03-14 08:27:09.260576: Moving AgoraManualorders.csv to archive
+2025-03-14 08:27:09.262129: XML creation completed
+2025-03-14 08:27:09.262186: No client specified, skipping webimport export
+2025-03-14 08:27:09.262190: All tasks complete, closing
+ 1 arguments: ['C:\\Python\\Workspace\\xmlorderimport\\main.py']

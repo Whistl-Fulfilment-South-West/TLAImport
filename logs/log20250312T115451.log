@@ -1,0 +1,15 @@
+2025-03-12 11:54:51.525118: Logging Start - James.Trimble
+2025-03-12 11:54:51.525349: Checking for files in C:/Python/Workspace/xmlorderimport
+2025-03-12 11:54:51.525616: 1 files found
+2025-03-12 11:54:51.525626: Importing test.csv
+2025-03-12 11:54:51.548314: Error checking on test.csv
+2025-03-12 11:54:51.548400: Concatenating 4 Address Columns
+2025-03-12 11:54:51.556536: No errors found, checking for orders
+2025-03-12 11:54:51.559480: 2 orders found in test.csv
+2025-03-12 11:54:51.561367: Creating xml for order TESTON in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-12 11:54:51.571094: Creating xml for order TESTTW in folder C:/Python/Workspace/xmlorderimport/ORD/IN
+2025-03-12 11:54:51.580230: Moving test.csv to archive
+2025-03-12 11:54:51.581681: XML creation completed
+2025-03-12 11:54:51.581714: No client specified, skipping webimport export
+2025-03-12 11:54:51.581719: All tasks complete, closing
+ 1 arguments: ['C:\\Python\\Workspace\\xmlorderimport\\main.py']
