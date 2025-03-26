@@ -10,9 +10,11 @@ import sys
 
 def main(source = 'C:/Python/Workspace/xmlorderimport',client = None):
     try:
+        
         #Make sure log folder exists, make it if not
         log_dest = source + f"/logs"
         os.makedirs(log_dest,exist_ok=True)
+        
 
         #Organise logging
         old_stdout = sys.stdout
@@ -25,8 +27,6 @@ def main(source = 'C:/Python/Workspace/xmlorderimport',client = None):
         if client != None:
             if client.startswith("\\\\"):
                 webimport = client
-            else:
-                webimport = find_webimport(client)
         #If failed, remove client so we don't try to move xmls
         if webimport == None:
             client = None
@@ -116,6 +116,7 @@ def main(source = 'C:/Python/Workspace/xmlorderimport',client = None):
             expml(dest,webimport,log_file)
     
         print(f"{datetime.now()}: All tasks complete, closing")
+    
     except Exception as e:
         print(f"{datetime.now()}: ERROR - {e}")
 
