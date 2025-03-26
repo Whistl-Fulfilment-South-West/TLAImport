@@ -23,5 +23,3 @@ def expml(source, dest, log, suffix=".xml"):
         sys.stderr.write(error_message)
         sys.stderr.flush()  # Ensure it writes immediately
     
-if __name__ == "__main__":
-    print(find_webimport("test"))

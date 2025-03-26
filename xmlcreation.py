@@ -28,7 +28,7 @@ def xml_creation(o,df,dest):
     
 
     #Set the delivery address reference to either the order number or MAIN, depending on if the delivery address matches the invoice address.
-    if "DELADDRESS" in order_dict and order_dict.get("DELADDRESS",order_dict["ADDRESS"]) != order_dict["ADDRESS"] and order_dict.get("DELADDRESS","") != "":
+    if "DELADDRESS" in order_dict and order_dict.get("DELADDRESS",order_dict["ADDRESS"]) != order_dict["ADDRESS"] and order_dict.get("DELADDRESS","") != "" and "ADDRREF" not in order_dict:
         delref = o
     else:
         delref = "MAIN"
@@ -102,7 +102,7 @@ def xml_creation(o,df,dest):
     head.append(recip)
     ET.SubElement(recip,"RecipientDelivery").text = "1"
     ET.SubElement(recip,"RecipientOrderType").text = ""
-    ET.SubElement(recip,"RecipientAddressRef").text = delref
+    ET.SubElement(recip,"RecipientAddressRef").text = order_dict.get("ADDRREF",delref)
     ET.SubElement(recip,"RecipientInitials").text = order_dict.get("DELFIRSTNAME",order_dict.get("FIRSTNAME",""))
     ET.SubElement(recip,"RecipientSurname").text = order_dict.get("DELSURNAME",order_dict.get("SURNAME",""))
     ET.SubElement(recip,"InvoiceCompany").text = order_dict.get("DELCOMPANY",order_dict.get("COMPANY",""))

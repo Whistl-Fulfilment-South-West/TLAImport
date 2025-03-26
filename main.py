@@ -8,7 +8,8 @@ import sys
 
 
 
-def main(source = 'C:/Python/Workspace/xmlorderimport',client = None):
+
+def main(source = 'C:/Development/python/xmlorderimport',client = None):
     try:
         
         #Make sure log folder exists, make it if not
@@ -69,6 +70,9 @@ def main(source = 'C:/Python/Workspace/xmlorderimport',client = None):
             #make all columns uppercase and remove underscores except for ref_no (to make checking they exist easier)
             df.columns = map(str.upper, df.columns)
             df.rename(columns={col: col.replace("_", "") for col in df.columns if col != "REF_NO"}, inplace=True)
+
+            #rename common column misnomers
+            df = renames(df)
 
             print(f"{datetime.now()}: Error checking on {l}")
 

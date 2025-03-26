@@ -133,3 +133,9 @@ def concatenate_columns(df, prefix):
 #         else:
 #             row["ERROR"] = row["ERROR"] + "|POTENTIAL INJECTION ATTACK - FILE REJECTED"
 #     return row
+
+def renames(df):
+    df.rename(columns=lambda x: x[3:] if x.startswith("INV") else x, inplace=True)
+    renam = {"ORDERNUMBER":"REF_NO","SKU":"PART","POSTAGE":"DELCHG","PAYMETH":"PAYMETHOD","PAYAMOUNT":"ORDTOTAL"}
+    df.rename(columns=renam, inplace=True)
+    return df
