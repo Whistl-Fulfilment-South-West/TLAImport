@@ -36,9 +36,9 @@ def archive_file(file,source,suffix = ".csv"):
     os.rename(source + "/" + file, arch + "/" + nufile)
 
 
-def detect_encoding(file_path, sample_size=10000):
+def detect_encoding(file_path, sample_size=1000):
     with open(file_path, 'rb') as f:
-        raw_data = f.read(sample_size)  # Read a small sample
+        raw_data = f.read(sample_size)
     result = chardet.detect(raw_data)
     return result['encoding']
 
@@ -48,10 +48,6 @@ def convert_to_utf8(input_file, output_file):
     if encoding.lower() != 'utf-8':  # Convert only if not already UTF-8
         df = pd.read_csv(input_file, encoding=encoding, low_memory=False)
         df.to_csv(output_file, encoding='utf-8', index=False)
-        print(f"{datetime.now()}: File converted from {encoding} to UTF-8: {output_file}")
-        return output_file
+        print(f"{datetime.now()}: File converted from {encoding} to UTF-8")
     else:
-        print(f"{datetime.now()}: File is already UTF-8 encoded: {input_file}")
-        return None
-#df = import_csv("~/workspace/github.com/JimmyT64/xmlorderimport/test.csv")
-#print(df.head())
+        print(f"{datetime.now()}: File is already UTF-8 encoded")

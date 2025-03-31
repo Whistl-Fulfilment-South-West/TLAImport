@@ -21,5 +21,5 @@ def expml(source, dest, log, suffix=".xml"):
         error_message = f"{datetime.now()}: ERROR - {str(e)}\n"
         sys.stderr = log
         sys.stderr.write(error_message)
-        sys.stderr.flush()  # Ensure it writes immediately
+        sys.stderr.flush() 
     

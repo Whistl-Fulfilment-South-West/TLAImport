@@ -37,16 +37,15 @@ def xml_creation(o,df,dest):
     otg = 0.0
     otn = 0.0
     otv = 0.0
-    
+    dcg = 0
+    dcn = 0
+    dcv = 0
     #Calculate delivery charge gross/tax/net
     if "DELCHG" in order_dict:
         dcg = order_dict["DELCHG"]
         dcn = round((dcg/6) * 5,2)
         dcv = round(dcg - dcn,2)
-    else:
-        dcg = 0
-        dcn = 0
-        dcv = 0
+
     #Calculate order total gross/tax/net
     if "ORDTOTAL" in order_dict:
         otg = order_dict["ORDTOTAL"]
@@ -61,6 +60,7 @@ def xml_creation(o,df,dest):
         otg = dcg
         otn = round((otg/6) * 5,2)
         otv = round(otg - otn,2)
+
     #XML Creation - order_dict has most of the order level values, others are in their own variables (set above).
     root = ET.Element("DTD_ORDER")
     head = ET.Element("OrderHead")
@@ -120,8 +120,7 @@ def xml_creation(o,df,dest):
     ET.SubElement(recip,"RecipientCarrierService").text = order_dict.get("DELMETHOD","RECALC")
     ET.SubElement(recip,"RecipientDespatchDate").text = ""
     ET.SubElement(recip,"RecipientCarrierFixed").text = "FIXED"
-    line_number = 1  # Reset the line number at the start of each order
-    #Loop through rows, adding XML elements for each line
+    line_number = 1 
     for _, row in df.iterrows():
         add_order_line(recip, row.to_dict(), line_number)
         line_number += 1

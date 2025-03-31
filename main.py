@@ -75,8 +75,9 @@ def main(source = 'C:/Development/python/xmlorderimport',client = None):
             #initialise error columns
             df["ERROR"] = ""
 
-            #make all columns uppercase and remove underscores except for ref_no (to make checking they exist easier)
+            #make all columns uppercase and remove spaces and underscores except for ref_no/ref no (to make checking they exist easier)
             df.columns = map(str.upper, df.columns)
+            df.rename(columns={col: col.replace(" ", "_") for col in df.columns if col != "REF_NO"}, inplace=True)
             df.rename(columns={col: col.replace("_", "") for col in df.columns if col != "REF_NO"}, inplace=True)
 
             #rename common column misnomers
@@ -92,13 +93,14 @@ def main(source = 'C:/Development/python/xmlorderimport',client = None):
                 print(f"{datetime.now()}: Errors found in {l}, exporting error file to {source}/errors")
                 error_export(df,source,l)
                 continue
+
             print(f"{datetime.now()}: No errors found, checking for orders")
 
             #Get individual orders from dataframe
             grup = df.groupby("REF_NO")
             orders = grup.groups.keys()
             if len(orders) == 0:
-                print("No orders found, aborting import")
+                print(f"{datetime.now()}: No orders found, aborting import")
                 continue
             print(f"{datetime.now()}: {len(orders)} orders found in {l}")
 
@@ -128,7 +130,7 @@ def main(source = 'C:/Development/python/xmlorderimport',client = None):
             expml(dest,webimport,log_file)
     
         print(f"{datetime.now()}: All tasks complete, closing")
-    
+
     except Exception as e:
         print(f"{datetime.now()}: ERROR - {e}")
 

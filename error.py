@@ -54,6 +54,7 @@ def rowchex(row):
     for col in required_columns:
         if row[col] == "" or pd.isna(row[col]):
             errors.append(f"{col} column empty")
+
     #Order number length check
     if len(str(row["REF_NO"])) > 12:
         errors.append("Ref_No too long (>12 chars)")
@@ -91,13 +92,12 @@ def rowchex(row):
                 errors.append("Postage Charge not a number")
             else:
                 row["DELCHG"] = float(row["DELCHG"])
-    print("HERE2")
     #Qty numeric check
     if pd.isna(pd.to_numeric(row["QTY"], errors='coerce')):
         errors.append("Qty not a number or blank")
     else:
         row["QTY"] = float(re.sub(r'[^0-9.]','',str(round(row["QTY"]))))
-    #MORE CHEX TO COME
+        
     #Concat the errors into the error column using | as the join.
     
     if errors:
@@ -131,20 +131,10 @@ def concatenate_columns(df, prefix):
         df[prefix] = df[cols].fillna('').agg('~'.join, axis=1).str.replace(r"~+", "~", regex=True).str.strip("~")
     return df
 
-# def inj_chex(row):
-#     concerned = ["DROP TABLE","INSERT","DELETE FROM"]
-#     con = []
-#     for c in concerned:
-#         con.append(row.str.contains(pat = c, case = False))
-#     if any(con) == True:
-#         if row["ERROR"] == "":
-#             row["ERROR"] = "POTENTIAL INJECTION ATTACK - FILE REJECTED"
-#         else:
-#             row["ERROR"] = row["ERROR"] + "|POTENTIAL INJECTION ATTACK - FILE REJECTED"
-#     return row
 
 def renames(df):
     df.rename(columns=lambda x: x[3:] if x.startswith("INV") else x, inplace=True)
     renam = {"ORDERNUMBER":"REF_NO","SKU":"PART","POSTAGE":"DELCHG","PAYMETH":"PAYMETHOD","PAYAMOUNT":"ORDTOTAL"}
     df.rename(columns=renam, inplace=True)
+    df.rename(columns=lambda x: x.strip(), inplace = True)
     return df
