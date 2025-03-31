@@ -41,18 +41,23 @@ def errorchex(df):
     #Perform checks on individual rows
     df = df.apply(rowchex, axis = 1)
     df = df.apply(error_none, axis = 1)
+    
+    #Make sure part is not a float, and remove trailing ".0" if it is
+    df["PART"] = df["PART"].apply(lambda x: str(int(x)) if isinstance(x, float) and pd.notna(x) else str(x))
+    
     return df
 
 def rowchex(row):
     required_columns = ["REF_NO", "PART", "QTY", "FIRSTNAME", "SURNAME", "ADDRESS", "CITY", "POSTCODE"]
     errors = []
+
     for col in required_columns:
         if row[col] == "" or pd.isna(row[col]):
             errors.append(f"{col} column empty")
     #Order number length check
     if len(str(row["REF_NO"])) > 12:
         errors.append("Ref_No too long (>12 chars)")
-    
+
     # Order total numeric check
     if "ORDTOTAL" in row.index and not pd.isna(row["ORDTOTAL"]):
         try:
@@ -63,7 +68,7 @@ def rowchex(row):
                 errors.append("Order Total not a number")
             else:
                 row["ORDTOTAL"] = float(row["ORDTOTAL"])
-    
+
     # Unit price numeric check
     if "UNITPRICE" in row.index and not pd.isna(row["UNITPRICE"]):
         try:
@@ -74,18 +79,19 @@ def rowchex(row):
                 errors.append("Unit Price not a number")
             else:
                 row["UNITPRICE"] = float(row["UNITPRICE"])
-    
     # Delivery charge numeric check
-    if "DELCHG" in row.index and not pd.isna(row["DELCHG"]):
+
+
+    if "DELCHG" in row.index and not pd.isna(row["DELCHG"]):  # Use `.at`
         try:
             row["DELCHG"] = float(row["DELCHG"])
         except (ValueError, TypeError):
             row["DELCHG"] = re.sub(r'[^0-9.]', '', str(row["DELCHG"]))
             if pd.isna(pd.to_numeric(row["DELCHG"], errors='coerce')):
-                errors.append("Delivery Charge not a number")
+                errors.append("Postage Charge not a number")
             else:
                 row["DELCHG"] = float(row["DELCHG"])
-    
+    print("HERE2")
     #Qty numeric check
     if pd.isna(pd.to_numeric(row["QTY"], errors='coerce')):
         errors.append("Qty not a number or blank")
@@ -93,8 +99,11 @@ def rowchex(row):
         row["QTY"] = float(re.sub(r'[^0-9.]','',str(round(row["QTY"]))))
     #MORE CHEX TO COME
     #Concat the errors into the error column using | as the join.
+    
     if errors:
         row["ERROR"] = row["ERROR"] + "|" + "|".join(errors) if row["ERROR"] else "|".join(errors)
+
+    
     return row
 
 def add_error(df, err):

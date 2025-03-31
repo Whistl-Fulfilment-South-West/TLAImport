@@ -4,6 +4,7 @@ from error import *
 from xmlcreation import *
 from datetime import datetime
 from exportxml import *
+import numpy as np
 import sys
 
 
@@ -53,16 +54,23 @@ def main(source = 'C:/Development/python/xmlorderimport',client = None):
 
         #import files seperately.
         for l in list:
+            print(f"{datetime.now()}: Detecting encoding of {l}")
+            convert_to_utf8(source +"/"+ l, source +"/"+ l)
+
+            
             print(f"{datetime.now()}: Importing {l}")
 
             #import csv into dataframe
-            df = import_csv(source +"/"+ l)
+            df = import_csv(source +"/"+ l) 
+
+            #remove fields that are just a space, to prepare for the below
+            df.replace(' ', np.nan, inplace=True)
 
             #Drop columns with no values in them
             df = df.dropna(axis = 1,how = 'all')
 
             #Drop rows with no values in them
-            df = df.dropna(axis = 0,how = 'all')
+            df = df.dropna(how = 'all')
 
             #initialise error columns
             df["ERROR"] = ""

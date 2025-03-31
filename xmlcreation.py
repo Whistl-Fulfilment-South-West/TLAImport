@@ -68,7 +68,7 @@ def xml_creation(o,df,dest):
     ET.SubElement(head,"Site").text = order_dict.get("SITE","")
     ET.SubElement(head,"Method").text = order_dict.get("METHOD","")
     ET.SubElement(head,"OrderReferences").text = order_dict.get("REF_NO","")
-    ET.SubElement(head,"Buyer").text = "UNKNOWN"
+    ET.SubElement(head,"Buyer").text = order_dict.get("CUSTOMER", "")
     ET.SubElement(head,"ExternalCustomerCode").text = order_dict.get("CUSTOMER", "")
     ET.SubElement(head,"OrderDate").text = order_dict.get("DATEREQUEST",datetime.datetime.now().strftime('%d/%m/%Y'))
     ET.SubElement(head,"CustType").text =  order_dict.get("CUSTTYPE", "")
