@@ -1,21 +1,15 @@
 import pandas as pd
 import os
 import time
-import sys
 import glob
 from datetime import datetime
 from os import listdir
-import io
 import chardet
 
 def import_csv(path):
     return pd.read_csv(path, engine = "python",index_col = False)
 
-def import_csv2(path):
-    with open(path, "r") as f:
-        lines = [line for line in f if not line.strip(",").strip() == ""]
 
-    return pd.read_csv(io.StringIO("\n".join(lines)))
     
 def logclear(path, suffix = ".log"):
     for f in os.listdir(path):

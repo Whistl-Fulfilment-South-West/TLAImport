@@ -17,7 +17,6 @@ def main(source = 'C:/Development/python/xmlorderimport',client = None):
         log_dest = source + f"/logs"
         os.makedirs(log_dest,exist_ok=True)
         
-
         #Organise logging
         old_stdout = sys.stdout
         log_file = open(log_dest + f"/log{datetime.now().strftime("%Y%m%dT%H%M%S")}.log","w")
@@ -42,7 +41,7 @@ def main(source = 'C:/Development/python/xmlorderimport',client = None):
         else:
             print(f"{datetime.now()}: Source Folder - {source}, Destination folder - {webimport}")
         
-        #Set destination folder based on source
+        #Set initial destination folder based on source
         dest = source + "/ORD/IN"
     
         #Make sure destination folder exists
@@ -65,7 +64,7 @@ def main(source = 'C:/Development/python/xmlorderimport',client = None):
             print(f"{datetime.now()}: Importing {l}")
 
             #import csv into dataframe
-            df = import_csv(source +"/"+ l) 
+            df = import_csv(source +"/"+ l)
 
             #remove fields that are just a space, to prepare for the below
             df.replace(' ', np.nan, inplace=True)
@@ -76,7 +75,7 @@ def main(source = 'C:/Development/python/xmlorderimport',client = None):
             #Drop rows with no values in them
             df = df.dropna(how = 'all')
 
-            #initialise error columns
+            #initialise error column
             df["ERROR"] = ""
 
             #make all columns uppercase and remove spaces and underscores except for ref_no/ref no (to make checking they exist easier)
@@ -141,7 +140,7 @@ def main(source = 'C:/Development/python/xmlorderimport',client = None):
     finally:
         #close logging
         sys.stdout = old_stdout
-        log_file.close()     
+        log_file.close()
         
 
 

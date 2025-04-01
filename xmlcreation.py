@@ -2,7 +2,6 @@ import pandas as pd
 import xml.etree.cElementTree as ET
 import datetime
 import os
-from error import error_export
 
 def xml_creation(o,df,dest):
     
