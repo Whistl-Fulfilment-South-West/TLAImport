@@ -1,5 +1,7 @@
 import pandas as pd
 import os
+import time
+import sys
 import glob
 from datetime import datetime
 from os import listdir
@@ -15,6 +17,13 @@ def import_csv2(path):
 
     return pd.read_csv(io.StringIO("\n".join(lines)))
     
+def logclear(path, suffix = ".log"):
+    for f in os.listdir(path):
+        g = os.path.join(path, f)
+        if g.endswith(suffix):
+            if os.stat(g).st_mtime < time.time() - (30 * 86400):
+                if os.path.isfile(g):
+                    os.remove(g)
 
 def getpath(source):
     extension = "csv"

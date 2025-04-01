@@ -23,6 +23,10 @@ def main(source = 'C:/Development/python/xmlorderimport',client = None):
         log_file = open(log_dest + f"/log{datetime.now().strftime("%Y%m%dT%H%M%S")}.log","w")
         sys.stdout = log_file
         print(f"{datetime.now()}: Logging Start - {os.getenv("username")}")
+
+        print(f"{datetime.now()}: Clearing old log files from {log_dest}")
+
+        logclear(log_dest)
         
         #Find webimport folder if client specified
         webimport = None
