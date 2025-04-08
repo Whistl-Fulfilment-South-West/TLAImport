@@ -95,6 +95,7 @@ def main(source = 'C:/Development/python/xmlorderimport',client = None):
             if df["ERROR"].any():
                 print(f"{datetime.now()}: Errors found in {l}, exporting error file to {source}/errors")
                 error_export(df,source,l)
+                err_display(f"{datetime.now()}: Errors found in {l}, exporting error file to {source}/errors")
                 continue
 
             print(f"{datetime.now()}: No errors found, checking for orders")
@@ -124,6 +125,9 @@ def main(source = 'C:/Development/python/xmlorderimport',client = None):
             
         print(f"{datetime.now()}: XML creation completed")
 
+        print(f"{datetime.now()}: Clearing down old archive files from {source}/done")
+        archcleardown(source)
+
         #If no client specified, don't export XMLs
         if client == None:
             print(f"{datetime.now()}: No client specified, skipping webimport export")
@@ -136,11 +140,13 @@ def main(source = 'C:/Development/python/xmlorderimport',client = None):
 
     except Exception as e:
         print(f"{datetime.now()}: ERROR - {e}")
+        err_display(e)
 
     finally:
         #close logging
         sys.stdout = old_stdout
         log_file.close()
+        
         
 
 

@@ -1,3 +1,0 @@
-PART,QTY,UNITPRICE,DELCHG,FIRSTNAME,SURNAME,EMAIL,TELEPHONE,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,CITY,COUNTY,POSTCODE,COUNTRY,SOURCE,CARRIER,DELMETHOD,REF_NO,DELFIRSTNAME,DELSURNAME,DELADDRESS,DELCITY,DELPOSTCODE,ERROR,ADDRESS
-Test,2.0,15.0,2.0,Test,Testerman,test@testland.test,1234567890,1 Test Drive,Testingville,Testton,Nanover Place,Test,Testshire,TE5 5TS,GB,WEB,RMT,RMTSTD,TESTON,,,,,,,1 Test Drive~Testingville~Testton~Nanover Place
-Test2,,,2.0,Test,Testerman,test@testland.test,1234567890,1 Test Drive,Testingville,Testton,Nanover Place,Test,Testshire,TE5 5TS,GB,WEB,RMT,RMTSTD,TESTTW,John,Testerson,5 Test Street,Testville,TE7 8RT,QTY column empty|Qty not a number or blank,1 Test Drive~Testingville~Testton~Nanover Place

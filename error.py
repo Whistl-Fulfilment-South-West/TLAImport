@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import re
 from datetime import datetime
+import tkinter as tk
 
 def errorchex(df):
     #Double make sure ERROR column is initialised
@@ -23,7 +24,14 @@ def errorchex(df):
 
     if "DELADDRESS" not in df:
         df = concatenate_columns(df, "DELADDRESS")
-    
+
+
+    #De-concatenate name column if it exists and firstname and surname does not
+    if "NAME" in df and "FIRSTNAME" not in df and "SURNAME" not in df:
+        df[['TITLE', 'FIRSTNAME', 'SURNAME']] = df['NAME'].apply(split_name)
+
+    if "DELNAME" in df and "DELFIRSTNAME" not in df and "DELSURNAME" not in df:
+        df[['DELTITLE', 'DELFIRSTNAME', 'DELSURNAME']] = df['DELNAME'].apply(split_name)
    
     #List required columns
     required_columns = ["REF_NO", "PART", "QTY", "FIRSTNAME", "SURNAME", "ADDRESS", "CITY", "POSTCODE"]
@@ -59,6 +67,9 @@ def rowchex(row):
     if len(str(row["REF_NO"])) > 12:
         errors.append("Ref_No too long (>12 chars)")
 
+    #Make phone number not numeric
+    if "PHONE" in row.index and not pd.isna(row["PHONE"]):
+        row["PHONE"] = str(int(row["PHONE"]))
     # Order total numeric check
     if "ORDTOTAL" in row.index and not pd.isna(row["ORDTOTAL"]):
         try:
@@ -134,7 +145,52 @@ def concatenate_columns(df, prefix):
 
 def renames(df):
     df.rename(columns=lambda x: x[3:] if x.startswith("INV") else x, inplace=True)
-    renam = {"ORDERNUMBER":"REF_NO","SKU":"PART","POSTAGE":"DELCHG","PAYMETH":"PAYMETHOD","PAYAMOUNT":"ORDTOTAL"}
+    renam = {"ORDERNUMBER":"REF_NO",
+             "SKU":"PART",
+             "POSTAGE":"DELCHG",
+             "PAYMETH":"PAYMETHOD",
+             "PAYAMOUNT":"ORDTOTAL",
+             "CUSTOMERNUMBER":"CUSTOMER",
+             "EMAILADDRESS":"EMAIL",
+             "PHONENUMBER":"PHONE",
+             "FORWARDER":"CARRIER",
+             "SERVICETYPE":"DELMETHOD",
+             "POSTALCODE":"POSTCODE",
+             "QUANTITY":"QTY",
+             "SPECIALINSTRUCTIONS":"DELMESS"}
     df.rename(columns=renam, inplace=True)
     df.rename(columns=lambda x: x.strip(), inplace = True)
     return df
+
+def split_name(name):
+    parts = name.split()
+    titles = ["Mr", "Mrs", "Ms", "Dr", "Prof", "Sir", "Madam", "Mx"]
+
+    if parts[0] in titles:  # If the first word is a title
+        title = parts[0]
+        first_name = parts[1] if len(parts) > 2 else None
+        surname = parts[2] if len(parts) > 2 else parts[1]  # If only two parts, second part is surname
+    else:  # If no title
+        title = None
+        first_name = parts[0]
+        surname = parts[1] if len(parts) > 1 else None  # Handle single-name cases
+    
+    return pd.Series([title, first_name, surname])
+
+#function to display error
+def err_display(e):
+    def on_ok():
+        error_window.destroy()
+
+    error_window = tk.Tk()
+    error_window.title("TLA Error")
+    error_window.geometry("300x150")
+    error_window.resizable(False, False)
+
+    message = tk.Label(error_window, text=str(e), wraplength=280, justify="left", fg="red")
+    message.pack(padx=10, pady=20)
+
+    ok_button = tk.Button(error_window, text="OK", command=on_ok)
+    ok_button.pack(pady=10)
+
+    error_window.mainloop()

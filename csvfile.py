@@ -54,3 +54,13 @@ def convert_to_utf8(input_file, output_file):
         print(f"{datetime.now()}: File converted from {encoding} to UTF-8")
     else:
         print(f"{datetime.now()}: File is already UTF-8 encoded")
+
+def archcleardown(source,suffix = ".csv"):
+    arch = source + "/done"
+    for f in os.listdir(arch):
+        g = os.path.join(arch, f)
+        if g.endswith(suffix):
+            if os.stat(g).st_mtime < time.time() - (30 * 86400):
+                if os.path.isfile(g):
+                    os.remove(g)
+    

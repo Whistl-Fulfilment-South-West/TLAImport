@@ -112,6 +112,7 @@ def xml_creation(o,df,dest):
     ET.SubElement(recip,"RecipientCountry").text = order_dict.get("DELCOUNTRY",order_dict.get("COUNTRY","GB"))
     ET.SubElement(recip,"RecipientPhone").text = order_dict.get("DELPHONE",order_dict.get("PHONE",""))
     ET.SubElement(recip,"RecipientEmail").text = order_dict.get("DELEMAIL",order_dict.get("EMAIL",""))
+    ET.SubElement(recip,"RecipientDelMessage").text = order_dict.get("DELMESS",'')
     ET.SubElement(recip,"RecipientDelChrgGross").text = str(dcg)
     ET.SubElement(recip,"RecipientDelChrgNet").text = str(dcn)
     ET.SubElement(recip,"RecipientDelChrgTax").text = str(dcv)
@@ -134,8 +135,8 @@ def xml_creation(o,df,dest):
     try:
         with open(dest + "/" + o + ".xml","wb") as file:
             tree.write(file,encoding="utf-8",xml_declaration=True)
-    except:
-        print(f"{datetime.datetime.now()}: XML Creation Failed for order {o}")
+    except Exception as e:
+        print(f"{datetime.datetime.now()}: XML Creation Failed for order {o} - {e}")
         if os.path.exists(dest + "/" + o + ".xml"):
             os.remove(dest + "/" + o + ".xml")
         
