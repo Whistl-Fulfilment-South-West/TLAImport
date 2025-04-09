@@ -10,7 +10,12 @@ import sys
 
 
 
-def main(source = 'C:/Development/python/xmlorderimport',client = None):
+def main(source = None, client = None):
+    #if source not defined, get the user to define it
+    if source == None:
+        err_display("Source location not defined in shortcut, please contact the IS team")
+        sys.exit()
+
     try:
         
         #Make sure log folder exists, make it if not
@@ -26,6 +31,7 @@ def main(source = 'C:/Development/python/xmlorderimport',client = None):
         print(f"{datetime.now()}: Clearing old log files from {log_dest}")
 
         logclear(log_dest)
+        
         
         #Find webimport folder if client specified
         webimport = None

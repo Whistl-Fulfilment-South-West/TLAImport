@@ -5,6 +5,9 @@ import glob
 from datetime import datetime
 from os import listdir
 import chardet
+import tkinter as tk
+from tkinter import filedialog, messagebox
+import sys
 
 def import_csv(path):
     return pd.read_csv(path, engine = "python",index_col = False)
@@ -63,4 +66,56 @@ def archcleardown(source,suffix = ".csv"):
             if os.stat(g).st_mtime < time.time() - (30 * 86400):
                 if os.path.isfile(g):
                     os.remove(g)
+
+
+def dirsearch():
+    
+
+    def select_directory():
+        directory = filedialog.askdirectory()
+        if directory:
+            selected_path.set(directory)
+
+    def confirm_selection():
+        directory = selected_path.get()
+        if directory and os.path.isdir(directory):
+            result["directory"] = directory
+            root.destroy()
+        else:
+            messagebox.showerror("Invalid Directory", "The selected path is not a valid directory. Please choose another.")
+    
+    def exit_program():
+        root.destroy()
+        sys.exit()  # Forcefully exits the Python script
+
+    # Create the GUI window
+    root = tk.Tk()
+    root.title("Select a Directory")
+    root.geometry("500x180")
+
+    selected_path = tk.StringVar()
+    result = {"directory": None}
+
+    # Handle the window close button
+    root.protocol("WM_DELETE_WINDOW", exit_program)
+
+    # Browse button
+    tk.Button(root, text="Browse...", command=select_directory).pack(pady=10)
+
+    # Display selected path
+    tk.Label(root, textvariable=selected_path, wraplength=480, bg="white",
+             relief="sunken", anchor="w", padx=5, pady=5).pack(fill="x", padx=10)
+
+     # Button frame
+    button_frame = tk.Frame(root)
+    button_frame.pack(pady=10)
+
+    tk.Button(button_frame, text="Confirm Selection", command=confirm_selection).pack(side="left", padx=10)
+    tk.Button(button_frame, text="Exit", command=exit_program).pack(side="right", padx=10)
+
+    # Run the GUI event loop (this blocks until root.destroy is called)
+    root.mainloop()
+
+    return result["directory"]
+    
     
