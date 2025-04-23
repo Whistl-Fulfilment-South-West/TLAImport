@@ -68,6 +68,23 @@ def archcleardown(source,suffix = ".csv"):
                     os.remove(g)
 
 
+def mess_display(message):
+    def on_ok():
+        message_window.destroy()
+
+    message_window = tk.Tk()
+    message_window.title("TLA Message")
+    message_window.geometry("300x150")
+    message_window.resizable(False, False)
+
+    message = tk.Label(message_window, text=str(message), wraplength=280, justify="left", fg="black")
+    message.pack(padx=10, pady=20)
+
+    ok_button = tk.Button(message_window, text="OK", command=on_ok)
+    ok_button.pack(pady=10)
+
+    message_window.mainloop()
+
 def dirsearch():
     
 

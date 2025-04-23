@@ -60,6 +60,9 @@ def xml_creation(o,df,dest):
         otn = round((otg/6) * 5,2)
         otv = round(otg - otn,2)
 
+    #Convert all values in order_dict to strings. Helps serialisation when creating the XML at the end.
+    order_dict = {k: str(v) for k, v in order_dict.items()}
+
     #XML Creation - order_dict has most of the order level values, others are in their own variables (set above).
     root = ET.Element("DTD_ORDER")
     head = ET.Element("OrderHead")
@@ -135,10 +138,12 @@ def xml_creation(o,df,dest):
     try:
         with open(dest + "/" + o + ".xml","wb") as file:
             tree.write(file,encoding="utf-8",xml_declaration=True)
+        return 0
     except Exception as e:
         print(f"{datetime.datetime.now()}: XML Creation Failed for order {o} - {e}")
         if os.path.exists(dest + "/" + o + ".xml"):
             os.remove(dest + "/" + o + ".xml")
+        return 1
         
 
 def add_order_line(parent, line_dict, line_number):

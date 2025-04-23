@@ -32,6 +32,16 @@ def errorchex(df):
 
     if "DELNAME" in df and "DELFIRSTNAME" not in df and "DELSURNAME" not in df:
         df[['DELTITLE', 'DELFIRSTNAME', 'DELSURNAME']] = df['DELNAME'].apply(split_name)
+    
+    #define function stripping non alphanumeric characters from beginning of a field
+    def strip_leading_non_alnum(ref):
+        return re.sub(r'^[^a-zA-Z0-9]+', '', str(ref))
+    #if the ref_no field exists, apply above function to it
+    if "REF_NO" in df:
+        df['REF_NO'] = df['REF_NO'].apply(strip_leading_non_alnum)
+    
+
+
    
     #List required columns
     required_columns = ["REF_NO", "PART", "QTY", "FIRSTNAME", "SURNAME", "ADDRESS", "CITY", "POSTCODE"]

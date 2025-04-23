@@ -6,7 +6,7 @@ import shutil
 from error import err_display
 
 
-def expml(source, dest, log, suffix=".xml"):
+def expml(source, dest, log, automated, suffix=".xml"):
     try:
         filenames = listdir(source)
         xmlnames = [filename for filename in filenames if filename.endswith(suffix)]
@@ -18,14 +18,16 @@ def expml(source, dest, log, suffix=".xml"):
 
     except PermissionError:
         error_message = f"{datetime.now()}: permission for folder {dest} denied. Please contact IS.\n"
-        err_display(f"ERROR - {e}")
+        if automated == 0:
+            err_display(f"ERROR - {e}")
         sys.stderr = log
         sys.stderr.write(error_message)
         sys.stderr.flush()
 
     except Exception as e:
         error_message = f"{datetime.now()}: ERROR - {str(e)}\n"
-        err_display(f"ERROR - {e}")
+        if automated == 0:
+            err_display(f"ERROR - {e}")
         sys.stderr = log
         sys.stderr.write(error_message)
         sys.stderr.flush() 

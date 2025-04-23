@@ -10,7 +10,7 @@ import sys
 
 
 
-def main(source = None, client = None):
+def main(source = None, client = None,automated = 0):
     #if source not defined, get the user to define it
     if source == None:
         err_display("Source location not defined in shortcut, please contact the IS team")
@@ -28,11 +28,13 @@ def main(source = None, client = None):
         sys.stdout = log_file
         print(f"{datetime.now()}: Logging Start - {os.getenv("username")}")
 
-        print(f"{datetime.now()}: Clearing old log files from {log_dest}")
+        if automated == 1:
+             print(f"{datetime.now()}: Automation active - no user-facing messages will be displayed")
 
+        print(f"{datetime.now()}: Clearing old log files from {log_dest}")
         logclear(log_dest)
         
-        
+     
         #Find webimport folder if client specified
         webimport = None
         if client != None:
@@ -58,7 +60,8 @@ def main(source = None, client = None):
         #list all csv files in source path
         list = find_csv_filenames(source)
         print(f"{datetime.now()}: {len(list)} files found")
-
+        if len(list) == 0:
+            raise Exception(f"No CSV files found in {source}")
 
 
         #import files seperately.
@@ -101,7 +104,8 @@ def main(source = None, client = None):
             if df["ERROR"].any():
                 print(f"{datetime.now()}: Errors found in {l}, exporting error file to {source}/errors")
                 error_export(df,source,l)
-                err_display(f"{datetime.now()}: Errors found in {l}, exporting error file to {source}/errors")
+                if automated == 0:
+                    err_display(f"{datetime.now()}: Errors found in {l}, exporting error file to {source}/errors")
                 continue
 
             print(f"{datetime.now()}: No errors found, checking for orders")
@@ -111,6 +115,8 @@ def main(source = None, client = None):
             orders = grup.groups.keys()
             if len(orders) == 0:
                 print(f"{datetime.now()}: No orders found, aborting import")
+                if automated == 0:
+                    err_display(f"No orders found in {l}")
                 continue
             print(f"{datetime.now()}: {len(orders)} orders found in {l}")
 
@@ -123,7 +129,11 @@ def main(source = None, client = None):
                     continue
                 of = df.loc[df["REF_NO"] == o]
                 print(f"{datetime.now()}: Creating xml for order {o} in folder {dest}")
-                xml_creation(o,of,dest)
+                err = xml_creation(o,of,dest)
+                if err:
+                    if automated == 0:
+                        err_display(f"XML creation for order {o} failed, see log for details")
+                    continue
 
             #Move CSV file to archive folder
             print(f"{datetime.now()}: Moving {l} to archive")
@@ -137,16 +147,21 @@ def main(source = None, client = None):
         #If no client specified, don't export XMLs
         if client == None:
             print(f"{datetime.now()}: No client specified, skipping webimport export")
+            if automated == 0:
+                mess_display("No webimport folder specified, please contact IS to move files")
         else:
         #else send XMLs to the webimport folder
             print(f"{datetime.now()}: exporting XML files to {webimport}")
-            expml(dest,webimport,log_file)
+            expml(dest,webimport,log_file,automated)
+            if automated == 0:
+                mess_display(f"Files exported to {webimport}")
     
         print(f"{datetime.now()}: All tasks complete, closing")
 
     except Exception as e:
         print(f"{datetime.now()}: ERROR - {e}")
-        err_display(e)
+        if automated == 0:
+            err_display(e)
 
     finally:
         #close logging
@@ -158,7 +173,15 @@ def main(source = None, client = None):
 
 if __name__ == "__main__":
     print(sys.argv)
-    if len(sys.argv) == 3:
+    if len(sys.argv) == 4:
+        source = sys.argv[1]
+        client = sys.argv[2]
+        if sys.argv[3] == "suppressdisplay":
+            automate = 1
+        else:
+            automate = 0
+        main(source,client,automate)
+    elif len(sys.argv) == 3:
         source = sys.argv[1]
         client = sys.argv[2]
         main(source,client)
