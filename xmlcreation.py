@@ -115,6 +115,8 @@ def xml_creation(o,df,dest):
     ET.SubElement(recip,"RecipientCountry").text = order_dict.get("DELCOUNTRY",order_dict.get("COUNTRY","GB"))
     ET.SubElement(recip,"RecipientPhone").text = order_dict.get("DELPHONE",order_dict.get("PHONE",""))
     ET.SubElement(recip,"RecipientEmail").text = order_dict.get("DELEMAIL",order_dict.get("EMAIL",""))
+    if "ORDERREQUEST" in order_dict:
+        ET.SubElement(recip,"RecipientMessage").text = order_dict.get("ORDERREQUEST","")
     ET.SubElement(recip,"RecipientDelMessage").text = order_dict.get("DELMESS",'')
     ET.SubElement(recip,"RecipientDelChrgGross").text = str(dcg)
     ET.SubElement(recip,"RecipientDelChrgNet").text = str(dcn)
