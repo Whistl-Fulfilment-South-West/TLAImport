@@ -152,9 +152,14 @@ def main(source = None, client = None,automated = 0):
         else:
         #else send XMLs to the webimport folder
             print(f"{datetime.now()}: exporting XML files to {webimport}")
-            expml(dest,webimport,log_file,automated)
             if automated == 0:
-                mess_display(f"Files exported to {webimport}")
+                mess_display(f"Exporting XML files to {webimport}")
+            exported = expml(dest,webimport,log_file)
+            if exported == 1:
+                raise Exception("Permission denied for XML destination folder - Please contact IS")
+            elif exported == 2:
+                raise Exception("Error exporting XML. Please check log.")
+
     
         print(f"{datetime.now()}: All tasks complete, closing")
 
@@ -172,7 +177,6 @@ def main(source = None, client = None,automated = 0):
 
 
 if __name__ == "__main__":
-    print(sys.argv)
     if len(sys.argv) == 4:
         source = sys.argv[1]
         client = sys.argv[2]
@@ -189,7 +193,7 @@ if __name__ == "__main__":
         source = sys.argv[1]
         client = None
         main(source)
+    elif len(sys.argv) > 4:
+        err_display("Shortcut has too many arguments. Please contact IS.")
     else:
         main()
-    
-

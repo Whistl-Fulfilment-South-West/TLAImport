@@ -36,9 +36,9 @@ def xml_creation(o,df,dest):
     otg = 0.0
     otn = 0.0
     otv = 0.0
-    dcg = 0
-    dcn = 0
-    dcv = 0
+    dcg = 0.0
+    dcn = 0.0
+    dcv = 0.0
     #Calculate delivery charge gross/tax/net
     if "DELCHG" in order_dict:
         dcg = order_dict["DELCHG"]
@@ -163,6 +163,8 @@ def add_order_line(parent, line_dict, line_number):
     create_sub_element(line, "LineTotalNet", ltn)
     create_sub_element(line, "LineTotalTax", ltv)
     create_sub_element(line, "Personalised", line_dict.get("PERSONALISATION", ""))
+    if "ORDERREQUEST" in line_dict:
+        create_sub_element(line, "external_guid",line_dict.get("ORDERREQUEST",""))
     return line
 
 def create_sub_element(parent, tag, text=""):
