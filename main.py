@@ -163,6 +163,11 @@ def main(source = None, client = None,automated = 0):
     
         print(f"{datetime.now()}: All tasks complete, closing")
 
+    except PermissionError as e:
+        print(f"{datetime.now()}: PERMISSION ERROR - {e}")
+        if automated == 0:
+            err_display("Permission error - file open or permission denied")
+    
     except Exception as e:
         print(f"{datetime.now()}: ERROR - {e}")
         if automated == 0:

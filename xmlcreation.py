@@ -107,7 +107,7 @@ def xml_creation(o,df,dest):
     ET.SubElement(recip,"RecipientAddressRef").text = order_dict.get("ADDRREF",delref)
     ET.SubElement(recip,"RecipientInitials").text = order_dict.get("DELFIRSTNAME",order_dict.get("FIRSTNAME",""))
     ET.SubElement(recip,"RecipientSurname").text = order_dict.get("DELSURNAME",order_dict.get("SURNAME",""))
-    ET.SubElement(recip,"InvoiceCompany").text = order_dict.get("DELCOMPANY",order_dict.get("COMPANY",""))
+    ET.SubElement(recip,"RecipientCompany").text = order_dict.get("DELCOMPANY",order_dict.get("COMPANY",""))
     ET.SubElement(recip,"RecipientPostcode").text = order_dict.get("DELPOSTCODE",order_dict.get("POSTCODE",""))
     ET.SubElement(recip,"RecipientAddress").text = order_dict.get("DELADDRESS",order_dict.get("ADDRESS",""))
     ET.SubElement(recip,"RecipientCity").text = order_dict.get("DELCITY",order_dict.get("CITY",""))
