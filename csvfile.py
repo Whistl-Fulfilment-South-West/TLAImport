@@ -8,6 +8,7 @@ import chardet
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import sys
+from charset_normalizer import from_path
 
 def import_csv(path):
     return pd.read_csv(path, engine = "python",index_col = False)
@@ -42,7 +43,11 @@ def archive_file(file,source,suffix = ".csv"):
     os.rename(source + "/" + file, arch + "/" + nufile)
 
 
-def detect_encoding(file_path, sample_size=1000):
+def detect_encoding(file_path):
+    result = from_path(file_path).best()
+    return result.encoding if result else 'utf-8'
+
+def detect_encoding_old(file_path, sample_size=1000):
     with open(file_path, 'rb') as f:
         raw_data = f.read(sample_size)
     result = chardet.detect(raw_data)
@@ -50,6 +55,27 @@ def detect_encoding(file_path, sample_size=1000):
 
 # Convert to UTF-8 if necessary
 def convert_to_utf8(input_file, output_file):
+    try:
+        encoding = detect_encoding(input_file)
+
+        if encoding is None:
+            raise ValueError("Encoding could not be detected.")
+        if encoding.lower() != 'utf-8' and encoding.lower != 'utf_8':
+            try:
+                df = pd.read_csv(input_file, encoding=encoding, low_memory=False, dtype=str)
+            except UnicodeDecodeError:
+                # Fallback: Try reading with 'errors=replace'
+                with open(input_file, 'r', encoding=encoding, errors='replace') as f:
+                    df = pd.read_csv(f, low_memory=False, dtype=str)
+
+            df.to_csv(output_file, encoding='utf-8', index=False)
+            print(f"{datetime.now()}: File converted from {encoding} to UTF-8")
+        else:
+            print(f"{datetime.now()}: File is already UTF-8 encoded")
+    except Exception as e:
+        print(f"{datetime.now()}: Error during conversion - {e}")
+
+def convert_to_utf8_old(input_file, output_file):
     encoding = detect_encoding(input_file)
     if encoding.lower() != 'utf-8':  # Convert only if not already UTF-8
         df = pd.read_csv(input_file, encoding=encoding, low_memory=False)

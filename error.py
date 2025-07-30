@@ -10,6 +10,7 @@ def errorchex(df):
         df["ERROR"] = ""
 
     
+
     #Concatenate Address columns if they exist and the single ADDRESS column does not
     # Rename if necessary
     if "ADDRESS" in df and "ADDRESS2" in df:
@@ -64,6 +65,8 @@ def errorchex(df):
     df["PART"] = df["PART"].apply(lambda x: str(int(x)) if isinstance(x, float) and pd.notna(x) else str(x))
     
     return df
+
+       
 
 def rowchex(row):
     required_columns = ["REF_NO", "PART", "QTY", "FIRSTNAME", "SURNAME", "ADDRESS", "CITY", "POSTCODE"]

@@ -6,12 +6,46 @@ from datetime import datetime
 from exportxml import *
 import numpy as np
 import sys
+from db import *
 
+def cust_transform(df,folder):
+    #get a list of "has customer" rows
+    has_customer = 'CUSTOMER' in df.columns and df['CUSTOMER'].notna() & df['CUSTOMER'].astype(str).str.strip().ne('')
 
+    #Get list of address columns (columns starting with "ADDRESS")
+    address_cols = [col for col in df.columns if col.upper().startswith('ADDRESS')]
+    # get list of "doesn't have address" rows
+    if address_cols:
+      # Consider a row "missing address" if ALL address columns are blank
+        no_address = df[address_cols].apply(lambda row: all(
+            pd.isna(val) or str(val).strip() == '' for val in row
+        ), axis=1)
+    else:
+        # No address-like columns exist at all, all rows must have their address checked
+        no_address = pd.Series([True] * len(df), index=df.index)
 
+    # Combine conditions
+    result = df[has_customer & no_address]
+
+    #if we have any results, we need to get a client and try to find the customer details
+    if not result.empty:
+        #get client based on folder or user input
+        client = get_client(folder)
+
+        # Modify the result rows
+        modified = result.apply(lambda row: get_addr(row, client), axis=1)
+
+        #make sure all columns are in the original df, update with details from above query
+        for col in modified.columns:
+            if col not in df.columns:
+                df[col] = None
+        df.update(modified)
+
+    return df
+    
 
 def main(source = None, client = None,automated = 0):
-    #if source not defined, get the user to define it
+    #if source not defined, error out immediately
     if source == None:
         err_display("Source location not defined in shortcut, please contact the IS team")
         sys.exit()
@@ -69,7 +103,6 @@ def main(source = None, client = None,automated = 0):
             print(f"{datetime.now()}: Detecting encoding of {l}")
             convert_to_utf8(source +"/"+ l, source +"/"+ l)
 
-            
             print(f"{datetime.now()}: Importing {l}")
 
             #import csv into dataframe
@@ -96,6 +129,9 @@ def main(source = None, client = None,automated = 0):
             df = renames(df)
 
             print(f"{datetime.now()}: Error checking on {l}")
+            
+            #Do the customer no/address checks at row level
+            df = cust_transform(df,source)
 
             #run error checks/cleaning
             df = errorchex(df)
@@ -201,4 +237,4 @@ if __name__ == "__main__":
     elif len(sys.argv) > 4:
         err_display("Shortcut has too many arguments. Please contact IS.")
     else:
-        main()
+        main("C:/Development/python/xmlorderimport")
