@@ -44,7 +44,7 @@ def cust_transform(df,folder):
     return df
     
 
-def main(source = None, client = None,automated = 0):
+def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30):
     #if source not defined, error out immediately
     if source == None:
         err_display("Source location not defined in shortcut, please contact the IS team")
@@ -66,13 +66,13 @@ def main(source = None, client = None,automated = 0):
              print(f"{datetime.now()}: Automation active - no user-facing messages will be displayed")
 
         print(f"{datetime.now()}: Clearing old log files from {log_dest}")
-        logclear(log_dest)
+        logclear(log_dest,logkeep)
         
      
         #Find webimport folder if client specified
         webimport = None
         if client != None:
-            if client.startswith("\\\\"):
+            if client.startswith("\\\\") or client.startswith("C:\\"):
                 webimport = client
         #If failed, remove client so we don't try to move xmls
         if webimport == None:
@@ -95,7 +95,13 @@ def main(source = None, client = None,automated = 0):
         list = find_csv_filenames(source)
         print(f"{datetime.now()}: {len(list)} files found")
         if len(list) == 0:
-            raise Exception(f"No CSV files found in {source}")
+            if automated == 0:
+                raise Exception(f"No CSV files found in {source}")
+            else:
+                print("Exiting Program")
+                sys.stdout = old_stdout
+                log_file.close()
+                sys.exit()
 
 
         #import files seperately.
@@ -164,6 +170,13 @@ def main(source = None, client = None,automated = 0):
                 if o == "":
                     continue
                 of = df.loc[df["REF_NO"] == o]
+                
+                #Add prefix if it exists
+                if prefix is not None:
+                    o = f"{prefix}{o}"  
+                    of = of.copy()  
+                    of["REF_NO"] = prefix + of["REF_NO"].astype(str)
+                  
                 print(f"{datetime.now()}: Creating xml for order {o} in folder {dest}")
                 err = xml_creation(o,of,dest)
                 if err:
@@ -214,11 +227,37 @@ def main(source = None, client = None,automated = 0):
         sys.stdout = old_stdout
         log_file.close()
         
-        
+#argument order (update 01.09.2025)     
+#1. Source - where the CSV file should be - no default, this is needed.
+#2. Destination - where the XML file will go - default NONE, will be kept in source folder/ORD/IN
+#3. Display suppression - if this is "suppressdisplay", no messages will be displayed (for automation). Default NONE, messages will be displayed.
+#4. Prefix - this will be added to the start of any order numbers if it exists. Default NONE, nothing will be added.
+#5. Log keep - how long in days the log files will be kept for. Anything older than this will be deleted the next time the process is ran. Default 30.
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 4:
+    if len(sys.argv) == 6:
+        source = sys.argv[1]
+        client = sys.argv[2]
+        if sys.argv[3] == "suppressdisplay":
+            automate = 1
+        else:
+            automate = 0
+        prefix = sys.argv[4]
+        logkeep = sys.argv[5]
+        main(source,client,automate,prefix,logkeep)
+        sys.exit()
+    elif len(sys.argv) == 5:
+        source = sys.argv[1]
+        client = sys.argv[2]
+        if sys.argv[3] == "suppressdisplay":
+            automate = 1
+        else:
+            automate = 0
+        prefix = sys.argv[4]
+        main(source,client,automate,prefix)
+        sys.exit()
+    elif len(sys.argv) == 4:
         source = sys.argv[1]
         client = sys.argv[2]
         if sys.argv[3] == "suppressdisplay":
@@ -226,15 +265,18 @@ if __name__ == "__main__":
         else:
             automate = 0
         main(source,client,automate)
+        sys.exit()
     elif len(sys.argv) == 3:
         source = sys.argv[1]
         client = sys.argv[2]
         main(source,client)
+        sys.exit()
     elif len(sys.argv) == 2:
         source = sys.argv[1]
         client = None
         main(source)
-    elif len(sys.argv) > 4:
+        sys.exit()
+    elif len(sys.argv) > 6:
         err_display("Shortcut has too many arguments. Please contact IS.")
     else:
         main("C:/Development/python/xmlorderimport")

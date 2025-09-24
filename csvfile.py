@@ -4,7 +4,6 @@ import time
 import glob
 from datetime import datetime
 from os import listdir
-import chardet
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import sys
@@ -15,11 +14,11 @@ def import_csv(path):
 
 
     
-def logclear(path, suffix = ".log"):
+def logclear(path,logkeep, suffix = ".log"):
     for f in os.listdir(path):
         g = os.path.join(path, f)
         if g.endswith(suffix):
-            if os.stat(g).st_mtime < time.time() - (30 * 86400):
+            if os.stat(g).st_mtime < time.time() - (logkeep * 86400):
                 if os.path.isfile(g):
                     os.remove(g)
 
@@ -47,11 +46,7 @@ def detect_encoding(file_path):
     result = from_path(file_path).best()
     return result.encoding if result else 'utf-8'
 
-def detect_encoding_old(file_path, sample_size=1000):
-    with open(file_path, 'rb') as f:
-        raw_data = f.read(sample_size)
-    result = chardet.detect(raw_data)
-    return result['encoding']
+
 
 # Convert to UTF-8 if necessary
 def convert_to_utf8(input_file, output_file):

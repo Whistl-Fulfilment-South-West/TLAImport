@@ -171,7 +171,8 @@ def renames(df):
              "SERVICETYPE":"DELMETHOD",
              "POSTALCODE":"POSTCODE",
              "QUANTITY":"QTY",
-             "SPECIALINSTRUCTIONS":"DELMESS"}
+             "SPECIALINSTRUCTIONS":"DELMESS",
+             "LINEITEMID":"ORDERREQUEST"}
     df.rename(columns=renam, inplace=True)
     df.rename(columns=lambda x: x.strip(), inplace = True)
     return df

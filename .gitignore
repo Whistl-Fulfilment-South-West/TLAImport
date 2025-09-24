@@ -29,4 +29,4 @@ ORD/IN/TESTON.xml
 build/
 dist/
 ORD/IN/TESTTW.xml
-
+*.lnk
