@@ -82,7 +82,7 @@ def rowchex(row):
 
     #Make phone number not numeric
     if "PHONE" in row.index and not pd.isna(row["PHONE"]):
-        row["PHONE"] = str(int(row["PHONE"]))
+        row["PHONE"] = str(row["PHONE"]).replace(".0","")
 
     # Order total numeric check
     if "ORDTOTAL" in row.index and not pd.isna(row["ORDTOTAL"]):
