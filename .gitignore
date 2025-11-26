@@ -1,5 +1,4 @@
 done/test.csv
-logs/log20250326T125330.log
 dist/main.exe
 __pycache__/
 build/main/Analysis-00.toc
@@ -14,11 +13,6 @@ build/main/xref-main.html
 done/test20250331T110917.csv
 errors/testerror.csv
 errors/utftesterror.csv
-logs/log20250326T140657.log
-logs/log20250326T140855.log
-logs/log20250331T110521.log
-logs/log20250331T110801.log
-logs/log20250331T110917.log
 logs/
 errors/
 ORD/IN/
@@ -27,6 +21,9 @@ ORD/
 errors/testerror.csv
 ORD/IN/TESTON.xml
 build/
+build/main/
 dist/
 ORD/IN/TESTTW.xml
 *.lnk
+*.XML
+*.csv
