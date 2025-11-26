@@ -95,7 +95,8 @@ def xml_creation(o,df,dest):
     ET.SubElement(head,"OrdTotalNet").text = str(otn)
     ET.SubElement(head,"OrdTotalTax").text = str(otv)
     ET.SubElement(head,"OrderSource").text = order_dict.get("SOURCE","WEB")
-    ET.SubElement(head,"Currency").text = order_dict.get("CURRENCY","GBP")
+    if "CURRENCY" in order_dict:
+        ET.SubElement(head,"Currency").text = order_dict.get("CURRENCY","GBP")
     OptIn = ET.Element("OptInData")
     head.append(OptIn)
     ET.SubElement(OptIn,"Email").text = "F"

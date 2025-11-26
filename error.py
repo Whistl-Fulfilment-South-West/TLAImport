@@ -3,6 +3,7 @@ import os
 import re
 from datetime import datetime
 import tkinter as tk
+from csvfile import mess_display
 
 def errorchex(df):
     #Double make sure ERROR column is initialised
@@ -45,7 +46,7 @@ def errorchex(df):
 
    
     #List required columns
-    required_columns = ["REF_NO", "PART", "QTY", "FIRSTNAME", "SURNAME", "ADDRESS", "CITY", "POSTCODE"]
+    required_columns = ["REF_NO", "PART", "QTY", "FIRSTNAME", "ADDRESS", "CITY", "POSTCODE"]
     
     #confirm required columns exist in dataframe
     for col in required_columns:
@@ -69,7 +70,7 @@ def errorchex(df):
        
 
 def rowchex(row):
-    required_columns = ["REF_NO", "PART", "QTY", "FIRSTNAME", "SURNAME", "ADDRESS", "CITY", "POSTCODE"]
+    required_columns = ["REF_NO", "PART", "QTY", "FIRSTNAME", "ADDRESS", "CITY", "POSTCODE"]
     errors = []
 
     for col in required_columns:
@@ -80,9 +81,18 @@ def rowchex(row):
     if len(str(row["REF_NO"])) > 12:
         errors.append("Ref_No too long (>12 chars)")
 
+    try:
+        float(row["PART"])
+        if "e" in row["PART"].lower():
+            errors.append(f"{row["PART"]} part in scientfic notation, please check original file")
+    except Exception:
+        pass
+            
     #Make phone number not numeric
     if "PHONE" in row.index and not pd.isna(row["PHONE"]):
-        row["PHONE"] = str(row["PHONE"]).replace(".0","")
+        row["PHONE"] = str(row["PHONE"]).replace(".0","").replace("44","0")
+        row["PHONE"] = re.sub(r"^\+44", "0", row["PHONE"])
+        row["PHONE"] = re.sub(r"^\+0","0", row["PHONE"])
 
     # Order total numeric check
     if "ORDTOTAL" in row.index and not pd.isna(row["ORDTOTAL"]):

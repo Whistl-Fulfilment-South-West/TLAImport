@@ -280,3 +280,9 @@ if __name__ == "__main__":
         err_display("Shortcut has too many arguments. Please contact IS.")
     else:
         main("C:/Development/python/xmlorderimport")
+
+
+#Patch notes 1.1.2
+    #Redid phone number checks to be more compact
+    #Part in scientific notation will now cause an error
+    #Surname field no longer mandatory

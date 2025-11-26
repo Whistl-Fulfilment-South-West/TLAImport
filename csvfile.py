@@ -10,7 +10,7 @@ import sys
 from charset_normalizer import from_path
 
 def import_csv(path):
-    return pd.read_csv(path, engine = "python",index_col = False)
+    return pd.read_csv(path, engine = "python",index_col = False, dtype={"PART": str,"Part":str,"part":str,"SKU":str,"sku":str})
 
 
     
