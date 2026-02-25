@@ -51,14 +51,16 @@ def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30):
         sys.exit()
 
     try:
-        
+        no_of_orders = 0
         #Make sure log folder exists, make it if not
         log_dest = source + f"/logs"
         os.makedirs(log_dest,exist_ok=True)
         
         #Organise logging
         old_stdout = sys.stdout
-        log_file = open(log_dest + f"/log{datetime.now().strftime("%Y%m%dT%H%M%S")}.log","w")
+        log_path = os.path.join(log_dest, f"log{datetime.now().strftime('%Y%m%dT%H%M%S')}.log")
+        log_file = open(log_path,"w")
+        #log_file = open(log_dest + f"/log{datetime.now().strftime("%Y%m%dT%H%M%S")}.log","w")
         sys.stdout = log_file
         print(f"{datetime.now()}: Logging Start - {os.getenv("username")}")
 
@@ -102,7 +104,6 @@ def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30):
                 sys.stdout = old_stdout
                 log_file.close()
                 sys.exit()
-
 
         #import files seperately.
         for l in list:
@@ -160,6 +161,8 @@ def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30):
                 if automated == 0:
                     err_display(f"No orders found in {l}")
                 continue
+            else:
+                no_of_orders += len(orders)
             print(f"{datetime.now()}: {len(orders)} orders found in {l}")
 
             #confirm destination path exists, create it if not
@@ -209,7 +212,7 @@ def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30):
             elif exported == 2:
                 raise Exception("Error exporting XML. Please check log.")
 
-    
+
         print(f"{datetime.now()}: All tasks complete, closing")
 
     except PermissionError as e:
@@ -226,6 +229,9 @@ def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30):
         #close logging
         sys.stdout = old_stdout
         log_file.close()
+        if no_of_orders == 0:
+            if os.path.exists(log_path):
+                os.remove(log_path)
         
 #argument order (update 01.09.2025)     
 #1. Source - where the CSV file should be - no default, this is needed.
@@ -280,3 +286,6 @@ if __name__ == "__main__":
         err_display("Shortcut has too many arguments. Please contact IS.")
     else:
         main("C:/Development/python/xmlorderimport")
+
+#patch log
+        #Added code to remove log if no orders were processed
