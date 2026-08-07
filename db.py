@@ -131,3 +131,38 @@ def clientchoose():
     except Exception as e:
         print(f"Error: {e}")
     return
+
+def fetch_dedupes(client):
+    server = 'SQL-SSRS'
+    database = 'Appz'
+    try:
+        # Connect to DB and fetch client data
+        conn = pyodbc.connect(f'DRIVER={{SQL Server}};SERVER={server};DATABASE={database};Trusted_Connection=yes')
+        cursor = conn.cursor()
+        sql = 'SELECT order_no FROM TLA_Orders WHERE Client = ?'
+        cursor.execute(sql,client)
+        return [row[0] for row in cursor.fetchall()]
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()
+
+def record_order(order,client):
+    server = 'SQL-SSRS'
+    database = 'Appz'
+    try:
+        conn = pyodbc.connect(f'DRIVER={{SQL Server}};SERVER={server};DATABASE={database};Trusted_Connection=yes')
+        cursor = conn.cursor()
+        sql = 'INSERT INTO TLA_Orders SELECT ?,?,GETDATE()'
+        cursor.execute(sql,order,client)
+        cursor.commit()
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()

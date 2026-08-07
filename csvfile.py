@@ -15,12 +15,17 @@ def import_csv(path):
 
     
 def logclear(path,logkeep, suffix = ".log"):
+    if type(logkeep) != type(1): 
+        if not logkeep.isnumeric():
+            print(f"Log keep time is not numeric - is {logkeep}")
+            return
     for f in os.listdir(path):
         g = os.path.join(path, f)
         if g.endswith(suffix):
-            if os.stat(g).st_mtime < time.time() - (logkeep * 86400):
+            if os.stat(g).st_mtime < time.time() - (int(logkeep) * 86400):
                 if os.path.isfile(g):
                     os.remove(g)
+                    print(f"Cleared file {g}")
 
 def getpath(source):
     extension = "csv"

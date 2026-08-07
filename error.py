@@ -132,7 +132,13 @@ def rowchex(row):
         errors.append("Qty not a number or blank")
     else:
         row["QTY"] = float(re.sub(r'[^0-9.]','',str(round(row["QTY"]))))
-        
+    
+    #Source column translator
+    if "SOURCE" in row.index and not pd.isna(row["SOURCE"]):
+        source_trans = {}
+        if row["SOURCE"] in source_trans:
+            row["SOURCE"] = source_trans[row["SOURCE"]]
+            
     #Concat the errors into the error column using | as the join.
     
     if errors:
@@ -170,24 +176,48 @@ def concatenate_columns(df, prefix):
 def renames(df):
     df.rename(columns=lambda x: x[3:] if x.startswith("INV") else x, inplace=True)
     renam = {"ORDERNUMBER":"REF_NO",
+             "ORDERID":"REF_NO",
              "SKU":"PART",
              "POSTAGE":"DELCHG",
              "PAYMETH":"PAYMETHOD",
              "PAYAMOUNT":"ORDTOTAL",
              "CUSTOMERNUMBER":"CUSTOMER",
              "EMAILADDRESS":"EMAIL",
+             "CUSTOMEREMAILADDRESS":"EMAIL",
              "PHONENUMBER":"PHONE",
              "FORWARDER":"CARRIER",
              "SERVICETYPE":"DELMETHOD",
              "POSTALCODE":"POSTCODE",
              "QUANTITY":"QTY",
              "SPECIALINSTRUCTIONS":"DELMESS",
-             "LINEITEMID":"ORDERREQUEST"}
+             "LINEITEMID":"ORDERREQUEST",
+             "SHIPPINGCUSTOMERNAME":"DELNAME",
+             "SHIPPINGADDRESS1":"DELADDRESS1",
+             "SHIPPINGADDRESS2":"DELADDRESS2",
+             "SHIPPINGADDRESS3":"DELADDRESS3",
+             "SHIPPINGTOWN":"DELCITY",
+             "SHIPPINGREGION":"DELCOUNTY",
+             "SHIPPINGPOSTCODE":"DELPOSTCODE",
+             "SHIPPINGCOUNTRYCODE":"DELCOUNTRY",
+             "BILLINGNAME":"NAME",
+             "BILLINGADDRESS1":"ADDRESS1",
+             "BILLINGADDRESS2":"ADDRESS2",
+             "BILLINGADDRESS3":"ADDRESS3",
+             "BILLINGTOWN":"CITY",
+             "BILLINGREGION":"COUNTY",
+             "BILLINGPOSTCODE":"POSTCODE",
+             "BILLINGCOUNTRYCODE":"COUNTRY",
+             "BILLINGPHONENUMBER":"PHONE",
+             "UNITCOST":"UNITPRICE",
+             "ORDERTOTAL":"ORDTOTAL"
+             }
+
     df.rename(columns=renam, inplace=True)
     df.rename(columns=lambda x: x.strip(), inplace = True)
     return df
 
 def split_name(name):
+    print(f"Splitting name: {name}")
     parts = name.split()
     titles = ["Mr", "Mrs", "Ms", "Dr", "Prof", "Sir", "Madam", "Mx"]
 

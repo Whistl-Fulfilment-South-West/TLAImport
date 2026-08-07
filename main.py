@@ -42,9 +42,11 @@ def cust_transform(df,folder):
         df.update(modified)
 
     return df
-    
 
-def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30):
+
+
+
+def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30,method=None,dedupe=None):
     #if source not defined, error out immediately
     if source == None:
         err_display("Source location not defined in shortcut, please contact the IS team")
@@ -63,7 +65,7 @@ def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30):
         #log_file = open(log_dest + f"/log{datetime.now().strftime("%Y%m%dT%H%M%S")}.log","w")
         sys.stdout = log_file
         print(f"{datetime.now()}: Logging Start - {os.getenv("username")}")
-
+        print(f"Source - {source}, Client - {client}, automated - {automated}, prefix - {prefix}, logkeep - {logkeep}, method - {method}")
         if automated == 1:
              print(f"{datetime.now()}: Automation active - no user-facing messages will be displayed")
 
@@ -87,7 +89,7 @@ def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30):
         
         #Set initial destination folder based on source
         dest = source + "/ORD/IN"
-    
+        
         #Make sure destination folder exists
         os.makedirs(dest,exist_ok=True)
 
@@ -132,14 +134,23 @@ def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30):
             df.rename(columns={col: col.replace(" ", "_") for col in df.columns if col != "REF_NO"}, inplace=True)
             df.rename(columns={col: col.replace("_", "") for col in df.columns if col != "REF_NO"}, inplace=True)
 
+            #For Biscuit imports, drop any rows with composite parent SKU
+            if "COMPOSITEPARENTSKU" in df:
+                df = df[df["COMPOSITEPARENTSKU"].isna() | (df["COMPOSITEPARENTSKU"].str.strip() == "")]
+
             #rename common column misnomers
             df = renames(df)
+
+            #if MOE set by the shortcut, use it.
+            if method:
+                df["METHOD"] = method
 
             print(f"{datetime.now()}: Error checking on {l}")
             
             #Do the customer no/address checks at row level
             df = cust_transform(df,source)
-
+            with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+                print(df)
             #run error checks/cleaning
             df = errorchex(df)
 
@@ -173,6 +184,16 @@ def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30):
                 if o == "":
                     continue
                 of = df.loc[df["REF_NO"] == o]
+
+                #If we have a dedupe client set, dedupe orders
+                if dedupe:
+                    dedupe_list = fetch_dedupes(dedupe)
+                    if o in dedupe_list:
+                        print(f"{datetime.now()}: Order {o} detected as duplicate, skipping.")
+                        continue
+                    else:
+                        print(f"{datetime.now()}: Order {o} new order, recording in dedupe list")
+                        record_order(o,dedupe)
                 
                 #Add prefix if it exists
                 if prefix is not None:
@@ -229,9 +250,9 @@ def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30):
         #close logging
         sys.stdout = old_stdout
         log_file.close()
-        if no_of_orders == 0:
-            if os.path.exists(log_path):
-                os.remove(log_path)
+        #if no_of_orders == 0:
+        #    if os.path.exists(log_path):
+        #        os.remove(log_path)
         
 #argument order (update 01.09.2025)     
 #1. Source - where the CSV file should be - no default, this is needed.
@@ -239,17 +260,51 @@ def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30):
 #3. Display suppression - if this is "suppressdisplay", no messages will be displayed (for automation). Default NONE, messages will be displayed.
 #4. Prefix - this will be added to the start of any order numbers if it exists. Default NONE, nothing will be added.
 #5. Log keep - how long in days the log files will be kept for. Anything older than this will be deleted the next time the process is ran. Default 30.
+#6. method - overwrite for the method of enquiry code for the orders given
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 6:
+    if len(sys.argv) == 8:
         source = sys.argv[1]
         client = sys.argv[2]
         if sys.argv[3] == "suppressdisplay":
             automate = 1
         else:
             automate = 0
-        prefix = sys.argv[4]
+        if sys.argv[4] == "None":
+            prefix = None
+        else:
+            prefix = sys.argv[4]
+        logkeep = sys.argv[5]
+        method = sys.argv[6]
+        dedupe = sys.argv[7]
+        main(source,client,automate,prefix,logkeep,method,dedupe)
+    elif len(sys.argv) == 7:
+        source = sys.argv[1]
+        client = sys.argv[2]
+        if sys.argv[3] == "suppressdisplay":
+            automate = 1
+        else:
+            automate = 0
+        if sys.argv[4] == "None":
+            prefix = None
+        else:
+            prefix = sys.argv[4]
+        logkeep = sys.argv[5]
+        method = sys.argv[6]
+        main(source,client,automate,prefix,logkeep,method)
+        sys.exit()
+    elif len(sys.argv) == 6:
+        source = sys.argv[1]
+        client = sys.argv[2]
+        if sys.argv[3] == "suppressdisplay":
+            automate = 1
+        else:
+            automate = 0
+        if sys.argv[4] == "None":
+            prefix = None
+        else:
+            prefix = sys.argv[4]
         logkeep = sys.argv[5]
         main(source,client,automate,prefix,logkeep)
         sys.exit()
@@ -260,7 +315,10 @@ if __name__ == "__main__":
             automate = 1
         else:
             automate = 0
-        prefix = sys.argv[4]
+        if sys.argv[4] == "None":
+            prefix = None
+        else:
+            prefix = sys.argv[4]
         main(source,client,automate,prefix)
         sys.exit()
     elif len(sys.argv) == 4:
@@ -282,10 +340,13 @@ if __name__ == "__main__":
         client = None
         main(source)
         sys.exit()
-    elif len(sys.argv) > 6:
+    elif len(sys.argv) > 7:
         err_display("Shortcut has too many arguments. Please contact IS.")
     else:
         main("C:/Development/python/xmlorderimport")
 
 #patch log
         #Added code to remove log if no orders were processed
+        #Added extra translations for Linnworks integration
+        #Added logic to remove kit-component lines when processing biscuit orders (for linworks)
+        #Added order source to list of possible arguments passed to shortcut
