@@ -46,7 +46,8 @@ def cust_transform(df,folder):
 
 
 
-def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30,method=None,dedupe=None):
+def main(source: str = None, client: str = None,automated: bool = 0,prefix:str = None,logkeep: int = 30,method: str = None,dedupe: str = None):
+    ##Main program logic. Takes a source folder(string), client folder(string), an automated flag(bool), a prefix(string), a "logkeep" number(int) to show how long to keep any logs for, a method(string) and a dedupe client(string)
     #if source not defined, error out immediately
     if source == None:
         err_display("Source location not defined in shortcut, please contact the IS team")
@@ -149,8 +150,7 @@ def main(source = None, client = None,automated = 0,prefix = None,logkeep = 30,m
             
             #Do the customer no/address checks at row level
             df = cust_transform(df,source)
-            with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
-                print(df)
+            
             #run error checks/cleaning
             df = errorchex(df)
 
@@ -350,3 +350,6 @@ if __name__ == "__main__":
         #Added extra translations for Linnworks integration
         #Added logic to remove kit-component lines when processing biscuit orders (for linworks)
         #Added order source to list of possible arguments passed to shortcut
+        #Added extra logic for lines of the address that are just numbers to prevent type errors when combining address lines.
+        #Added type hints to the main parameters
+        #Added translation for "Shipping cost" to "DELCHG" for Biscuit Linnworks orders

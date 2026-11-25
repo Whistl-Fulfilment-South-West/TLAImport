@@ -15,6 +15,8 @@ def errorchex(df):
     #Concatenate Address columns if they exist and the single ADDRESS column does not
     # Rename if necessary
     if "ADDRESS" in df and "ADDRESS2" in df:
+        df["ADDRESS"] = df["ADDRESS"].astype(str)
+        df["ADDRESS2"] = df["ADDRESS2"].astype(str)
         df = df.rename(columns={"ADDRESS": "ADDRESS1"})
 
     if "DELADDRESS" in df and "DELADDRESS2" in df:
@@ -22,9 +24,15 @@ def errorchex(df):
 
     # Concatenate Address and Delivery Address
     if "ADDRESS" not in df:
+        addr_col = [col for col in df if col.startswith('ADDRESS')]
+        for c in addr_col:
+            df[c] = df[c].astype(str)
         df = concatenate_columns(df, "ADDRESS")
 
     if "DELADDRESS" not in df:
+        addr_col = [col for col in df if col.startswith('DELADDRESS')]
+        for c in addr_col:
+            df[c] = df[c].astype(str)
         df = concatenate_columns(df, "DELADDRESS")
 
 
@@ -199,6 +207,7 @@ def renames(df):
              "SHIPPINGREGION":"DELCOUNTY",
              "SHIPPINGPOSTCODE":"DELPOSTCODE",
              "SHIPPINGCOUNTRYCODE":"DELCOUNTRY",
+             "SHIPPINGCOST":"DELCHG",
              "BILLINGNAME":"NAME",
              "BILLINGADDRESS1":"ADDRESS1",
              "BILLINGADDRESS2":"ADDRESS2",
